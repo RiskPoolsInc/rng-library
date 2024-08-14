@@ -1,4 +1,6 @@
 /bin/
 /obj/
 /Folder.DotSettings.user
-/.idea/.idea.RiskPool - Game Simulation.dir/.idea/
+/.idea/*/.idea/
+/.idea/
+/.vs/
