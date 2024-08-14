@@ -10,4 +10,5 @@ public class GameRound {
     public decimal CurrentGameRoundSum { get; set; }
     public int RoundNumber { get; set; }
     public GameRoundResultTypes Result { get; set; }
+    public string Hash { get; set; }
 }

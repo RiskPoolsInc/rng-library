@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text;
 
 using App.Core.Enums;
 
@@ -101,9 +102,12 @@ public class GameService {
             CurrentGameRoundSum = createGameRoundCommand.CurrentGameRoundSum,
             RoundNumber = createGameRoundCommand.RoundNumber,
             Result = createGameRoundCommand.Result,
+            Hash = CalculateHash(createGameRoundCommand.GeneratedNumber)
         };
+
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"Generated game round {gameRound.Id.ToString("D")}");
+        Console.WriteLine($"Hash {gameRound.Hash.ToLower()}");
+
         Console.ForegroundColor = gameRound.Result == GameRoundResultTypes.Win ? ConsoleColor.Green : ConsoleColor.Red;
         Console.WriteLine($"Round is {gameRound.Result}");
         Console.ForegroundColor = ConsoleColor.Blue;
@@ -134,11 +138,18 @@ public class GameService {
         await Task.Delay(next);
     }
 
+    private string CalculateHash(int number) {
+        using var hashInst = SHA256.Create();
+        var hash = Convert.ToHexString(hashInst.ComputeHash(Encoding.UTF8.GetBytes(number.ToString())));
+        return hash;
+    }
+
     private async Task<int> GenerateNextRandomNumber() {
         await RandomDelay(500, 1000);
-        var firstRandomNumber = RandomNumberGenerator.GetInt32(2, 5000);
+        var firstRandomNumber = RandomNumberGenerator.GetInt32(1, 1000000);
+
         await RandomDelay(1800, 2300);
-        var secondRandomNumber = RandomNumberGenerator.GetInt32(6000, 10000);
+        var secondRandomNumber = RandomNumberGenerator.GetInt32(1, 1000000);
         await RandomDelay(1800, 2300);
 
         var orderedRandomNumbers = new[] {
@@ -149,7 +160,6 @@ public class GameService {
         await RandomDelay(50, 100);
 
         var generatedRandomNumber = RandomNumberGenerator.GetInt32(orderedRandomNumbers[0], orderedRandomNumbers[1]);
-
         return generatedRandomNumber;
     }
 }
