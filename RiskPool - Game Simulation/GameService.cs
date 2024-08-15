@@ -36,8 +36,8 @@ public class GameService {
 
     public async Task RunGame(Game currentGame) {
         var currentGameId = currentGame.Id;
-        var gameCounter = 1;
-        var gameLose = false;
+        var betMultiplier = 1;
+        var gameIsLose = false;
         Console.WriteLine("Game is running...");
 
         for (var i = 0; i < currentGame.RoundsQuantity; i++) {
@@ -53,26 +53,26 @@ public class GameService {
             var roundResult = (generatedNumber % 2) == 0 ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
 
             if (roundResult == GameRoundResultTypes.Win)
-                gameCounter++;
+                betMultiplier++;
             else
-                gameCounter--;
+                betMultiplier--;
 
-            var currentRoundSum = gameCounter * currentGame.RoundSum;
+            var currentRoundSum = betMultiplier * currentGame.RoundSum;
 
             var createGameRoundCommand = new CreateGameRoundCommand(currentGameId, generatedNumber, roundResult, currentRoundSum,
                 roundNumber);
 
             AddGameRound(currentGame, createGameRoundCommand);
 
-            if (gameCounter <= 0) {
-                gameLose = true;
+            if (betMultiplier <= 0) {
+                gameIsLose = true;
                 GameIsLose(currentGame);
                 break;
             }
         }
 
-        if (!gameLose)
-            GameIsWin(currentGame, gameCounter);
+        if (!gameIsLose)
+            GameIsWin(currentGame, betMultiplier);
     }
 
     private void GameIsLose(Game currentGame) {
