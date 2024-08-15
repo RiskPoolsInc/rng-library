@@ -67,12 +67,11 @@ public class GameService {
             if (betMultiplier <= 0) {
                 gameIsLose = true;
                 GameIsLose(currentGame);
-                break;
+                return;
             }
         }
 
-        if (!gameIsLose)
-            GameIsWin(currentGame, betMultiplier);
+        GameIsWin(currentGame, betMultiplier);
     }
 
     private void GameIsLose(Game currentGame) {
